@@ -126,16 +126,21 @@ def get_posts(update = False):
 
     return posts
 
+def get_time_since_query(last_query):
+    if query_time:
+        time_since_query = format(time.time() - query_time, ".0f")
+    else:
+        time_since_query = "?"
+
+    return time_since_query
+
 class BlogFront(BlogHandler):
     def get(self):
         global query_time
 
         posts = get_posts()
 
-        if query_time:
-            time_since_query = format(time.time() - query_time, ".0f")
-        else:
-            time_since_query = "?"
+        time_since_query = get_time_since_query(query_time)
 
         if self.format == "html":
             self.render('front.html', posts = posts, time_since_query = time_since_query)
@@ -149,14 +154,16 @@ class PostPage(BlogHandler):
 
         posts = get_posts()
 
-        if not posts.:
+        post = None
+        for p in posts:
+            if p.key().id() == int(post_id):
+                post = p
+
+        if not post:
             self.error(404)
             return
 
-        if query_time:
-            time_since_query = format(time.time() - query_time, ".0f")
-        else:
-            time_since_query = "?"
+        time_since_query = get_time_since_query(query_time)
 
         if self.format == "html":
             self.render("permalink.html", post = post, time_since_query = time_since_query)
