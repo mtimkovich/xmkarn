@@ -125,13 +125,6 @@ class BlogFront(BlogHandler):
     def get(self):
         posts = get_posts()
 
-        if posts:
-            last_query = int(time.mktime(posts[0].last_modified.timetuple()))
-
-            time_since_query = format(time.time() - last_query, ".0f")
-        else:
-            time_since_query = "?"
-
         if self.format == "html":
             self.render('front.html', posts = posts, time_since_query = time_since_query)
         elif self.format == "json":
@@ -144,19 +137,10 @@ class PostPage(BlogHandler):
 
         posts = get_posts()
 
-        post = None
-        for p in posts:
-            if p.key().id() == int(post_id):
-                post = p
-
         if not post:
             self.error(404)
             return
 
-        last_query = int(time.mktime(posts[0].last_modified.timetuple()))
-
-        time_since_query = format(time.time() - last_query, ".0f")
-        
         if self.format == "html":
             self.render("permalink.html", post = post, time_since_query = time_since_query)
         elif self.format == "json":
