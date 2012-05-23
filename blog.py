@@ -106,7 +106,10 @@ class Post(db.Model):
              "last_modified": self.last_modified.strftime(time_fmt)}
         return d
 
+query_time = None
 def get_posts(update = False):
+    global query_time
+
     key = "posts"
 
     posts = memcache.get(key)
@@ -114,6 +117,8 @@ def get_posts(update = False):
     if posts is None or update:
         logging.error("DB QUERY")
         posts = Post.all().order("-created")
+
+        query_time = time.time()
 
         # prevents the running of multiple queries
         posts = list(posts)
@@ -123,7 +128,14 @@ def get_posts(update = False):
 
 class BlogFront(BlogHandler):
     def get(self):
+        global query_time
+
         posts = get_posts()
+
+        if query_time:
+            time_since_query = format(time.time() - query_time, ".0f")
+        else:
+            time_since_query = "?"
 
         if self.format == "html":
             self.render('front.html', posts = posts, time_since_query = time_since_query)
@@ -137,9 +149,14 @@ class PostPage(BlogHandler):
 
         posts = get_posts()
 
-        if not post:
+        if not posts.:
             self.error(404)
             return
+
+        if query_time:
+            time_since_query = format(time.time() - query_time, ".0f")
+        else:
+            time_since_query = "?"
 
         if self.format == "html":
             self.render("permalink.html", post = post, time_since_query = time_since_query)
