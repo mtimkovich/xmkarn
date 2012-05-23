@@ -115,7 +115,7 @@ def get_posts(update = False):
     posts = memcache.get(key)
 
     if posts is None or update:
-        logging.error("DB QUERY")
+        logging.info("DB QUERY")
         posts = Post.all().order("-created")
 
         query_time = time.time()
@@ -390,7 +390,7 @@ def top_arts(update = False):
     arts = memcache.get(key)
 
     if arts is None or update:
-        logging.error("DB QUERY")
+        logging.info("DB QUERY")
         arts = Art.all().order("-created").fetch(10)
 
         # prevents the running of multiple queries
