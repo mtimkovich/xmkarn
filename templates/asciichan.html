@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>/ascii/</title>
+  </head>
+
+  <body>
+   <style>
+    .map { position: absolute; right: 0; top: 0; }
+   </style>
+
+    <h2>/ascii/</h2>
+    <form method="post">
+     <label> title
+      <input type="text" name="title" value="{{title}}">
+     </label>
+
+     <br>
+
+     <label> art
+      <textarea name="art"
+       style="height: 100px; width: 400px; font-family: monospace">{{art}}</textarea>
+     </label>
+     <br>
+
+     <div style="color: red;">{{error}}</div>
+      <input type="submit">
+    </form>
+
+    {% if img_url %}
+    <img class="map" src="{{img_url}}">
+    {% endif %}
+
+    <hr>
+
+    {% for art in arts %}
+    <b>{{art.title}}</b>
+    <br>
+    <pre>
+    {{art.art}}
+    </pre>
+    {% endfor %}
+
+  </body>
+
+</html>
