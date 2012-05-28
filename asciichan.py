@@ -79,7 +79,6 @@ class ASCIIChan(BlogHandler):
         self.render("asciichan.html", title = title, art = art,
                     error = error, arts = arts, img_url = img_url)
 
-
     def get(self):
         return self.render_front()
 
